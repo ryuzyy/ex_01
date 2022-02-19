@@ -23,7 +23,7 @@ defmodule Issues.CLI do
       { [help: true], _, _ }
         -> :help
       { _, [user, project, count], _}
-        -> {user, project, count}
+        -> {user, project, count |> String.to_integer }
       { _, [user, project], _}
         -> {user, project, @default_count}
       _ -> :help
