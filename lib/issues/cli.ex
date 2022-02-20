@@ -1,4 +1,6 @@
 defmodule Issues.CLI do
+  import Logger
+
   @default_count 4
 
   @moduledoc """
@@ -17,17 +19,24 @@ defmodule Issues.CLI do
   Return a tuple of`{user, project, count}`, or `help` if help was given.
   """
   def parse_argv(argv) do
-    parse = OptionParser.parse(argv, switches: [ help: :boolean], aliases: [h: :help])
-
-    case parse do
-      { [help: true], _, _ }
-        -> :help
-      { _, [user, project, count], _}
-        -> {user, project, count |> String.to_integer }
-      { _, [user, project], _}
-        -> {user, project, @default_count}
-      _ -> :help
-    end
+    OptionParser.parse(argv,
+      switches: [help: :boolean],
+      aliases: [h: :help]
+    )
+    |> elem(1)
+    |> args_to_internal_representation()
   end
 
+  def args_to_internal_representation([user, project, count]) do
+    {user, project, count |> String.to_integer()}
+  end
+
+  def args_to_internal_representation([user, project]) do
+    {user, project, @default_count}
+  end
+
+  # 不正な引数、または --help の場合
+  def args_to_internal_representation(_) do
+    :help
+  end
 end
