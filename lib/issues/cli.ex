@@ -1,5 +1,4 @@
 defmodule Issues.CLI do
-
   @default_count 4
 
   @moduledoc """
@@ -41,11 +40,11 @@ defmodule Issues.CLI do
     :help
   end
 
-
   def process(:help) do
-    IO.puts """
+    IO.puts("""
     usage: issues <user> <project> [count | #{@default_count}]
-    """
+    """)
+
     System.halt(0)
   end
 
