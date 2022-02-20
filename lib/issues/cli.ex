@@ -1,5 +1,4 @@
 defmodule Issues.CLI do
-  import Logger
 
   @default_count 4
 
@@ -9,7 +8,9 @@ defmodule Issues.CLI do
   table of the last _n_ issues in a github project
   """
   def run(argv) do
-    parse_argv(argv)
+    argv
+    |> parse_argv()
+    |> process()
   end
 
   @doc """
@@ -38,5 +39,17 @@ defmodule Issues.CLI do
   # 不正な引数、または --help の場合
   def args_to_internal_representation(_) do
     :help
+  end
+
+
+  def process(:help) do
+    IO.puts """
+    usage: issues <user> <project> [count | #{@default_count}]
+    """
+    System.halt(0)
+  end
+
+  def process([user, project, _count]) do
+    Issues.GithubIssues.fetch(user, project)
   end
 end
